@@ -14,11 +14,13 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    needs: code
     steps:
       - name: docker build
         run: echo "docker is building"
   test:
     runs-on: ubuntu-latest
+    needs: [code,build]
     steps:
       - name: testing
         run: echo "testing docker"
