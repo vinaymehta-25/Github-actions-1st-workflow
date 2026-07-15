@@ -1,0 +1,25 @@
+name: cicd pipeline
+
+on: 
+  workflow_dispatch:
+
+
+jobs:
+
+  code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check code
+        run: echo "code clone from github"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker build
+        run: echo "docker is building"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing
+        run: echo "testing docker"
+        
