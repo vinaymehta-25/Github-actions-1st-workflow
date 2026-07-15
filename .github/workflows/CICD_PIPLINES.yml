@@ -2,6 +2,16 @@ name: cicd pipeline
 
 on: 
   workflow_dispatch:
+    inputs:
+      environment:
+        description: this is env value where workflow runs
+        default: 'dev' 
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+          - staging
 
 
 jobs:
