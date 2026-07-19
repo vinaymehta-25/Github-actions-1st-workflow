@@ -1,1 +1,790 @@
-<h1>my portfolio </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinay Mehta — Endpoint to Cloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --bg-deep:#080b14;
+    --bg-mid:#0f1730;
+    --bg-mid-2:#151d3d;
+    --azure:#3b82f6;
+    --violet:#8b5cf6;
+    --cyan:#22d3ee;
+    --amber:#f5a623;
+    --text-hi:#eef2ff;
+    --text-mid:#9aa5c7;
+    --text-low:#6b7597;
+    --glass-bg:rgba(255,255,255,0.045);
+    --glass-bg-strong:rgba(255,255,255,0.08);
+    --glass-border:rgba(255,255,255,0.10);
+    --glass-border-strong:rgba(255,255,255,0.18);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  body{
+    background:
+      radial-gradient(ellipse 900px 600px at 12% -5%, rgba(59,130,246,0.18), transparent 60%),
+      radial-gradient(ellipse 800px 700px at 90% 15%, rgba(139,92,246,0.16), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 50% 100%, rgba(34,211,238,0.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 45%, var(--bg-mid-2) 100%);
+    background-attachment:fixed;
+    color:var(--text-hi);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+
+  /* subtle grid texture, endpoint-network motif */
+  .grid-overlay{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 20%, black, transparent 75%);
+  }
+
+  .noise{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.03;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection{background:rgba(59,130,246,0.35); color:#fff;}
+
+  a{color:inherit; text-decoration:none;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--cyan);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px; height:1px;
+    background:linear-gradient(90deg, var(--cyan), transparent);
+  }
+
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em;}
+
+  .container{
+    max-width:1160px;
+    margin:0 auto;
+    padding:0 32px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:center;
+    padding-top:18px;
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:40px;
+    width:min(92%, 900px);
+    padding:12px 22px;
+    background:rgba(15,23,48,0.55);
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    border:1px solid var(--glass-border);
+    border-radius:100px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.35);
+  }
+  .nav-logo{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px; font-weight:500; color:var(--text-hi);
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-logo .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:pulse-dot 2.4s ease-in-out infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1;} 50%{opacity:0.35;}}
+
+  .nav-links{display:flex; gap:28px; font-size:13.5px; color:var(--text-mid);}
+  .nav-links a{position:relative; padding:4px 0; transition:color 0.25s ease;}
+  .nav-links a:hover{color:var(--text-hi);}
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px;
+    background:var(--cyan); transition:width 0.25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{
+    font-size:13px; font-family:'JetBrains Mono', monospace;
+    padding:8px 16px; border-radius:100px;
+    background:var(--glass-bg-strong); border:1px solid var(--glass-border-strong);
+    transition:all 0.25s ease;
+  }
+  .nav-cta:hover{background:rgba(59,130,246,0.18); border-color:rgba(59,130,246,0.5); transform:translateY(-1px);}
+
+  @media (max-width:720px){ .nav-links{display:none;} }
+
+  /* ---------- GLASS CARD BASE ---------- */
+  .glass{
+    background:var(--glass-bg);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    position:relative;
+  }
+  .glass::before{
+    content:'';
+    position:absolute; inset:0; border-radius:inherit;
+    padding:1px;
+    background:linear-gradient(150deg, rgba(255,255,255,0.14), rgba(255,255,255,0) 40%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+  }
+  .glass-hover{transition:transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, border-color 0.35s ease;}
+  .glass-hover:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(59,130,246,0.15);
+    border-color:var(--glass-border-strong);
+  }
+
+  section{position:relative; z-index:1; padding:120px 0;}
+  section:first-of-type{padding-top:0;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding-top:110px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; width:100%;
+  }
+  @media (max-width:940px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .hero-name{
+    font-size:clamp(38px, 5.4vw, 62px);
+    line-height:1.05;
+    margin-bottom:18px;
+    animation:rise 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .hero-name .accent-text{
+    background:linear-gradient(100deg, var(--cyan), var(--azure) 60%, var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-role{
+    font-family:'JetBrains Mono', monospace;
+    font-size:15px; color:var(--text-mid); margin-bottom:26px;
+    animation:rise 0.9s cubic-bezier(.2,.8,.2,1) 0.1s both;
+  }
+  .hero-role .sep{color:var(--text-low); margin:0 10px;}
+  .hero-desc{
+    font-size:16.5px; color:var(--text-mid); max-width:480px; margin-bottom:36px;
+    animation:rise 0.9s cubic-bezier(.2,.8,.2,1) 0.2s both;
+  }
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; animation:rise 0.9s cubic-bezier(.2,.8,.2,1) 0.3s both;}
+
+  @keyframes rise{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
+
+  .btn{
+    font-family:'Inter', sans-serif; font-weight:600; font-size:14px;
+    padding:14px 26px; border-radius:14px; display:inline-flex; align-items:center; gap:9px;
+    transition:all 0.3s cubic-bezier(.2,.8,.2,1);
+    cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{
+    background:linear-gradient(120deg, var(--azure), var(--violet));
+    color:#fff; box-shadow:0 8px 24px rgba(59,130,246,0.28);
+  }
+  .btn-primary:hover{transform:translateY(-3px); box-shadow:0 14px 34px rgba(59,130,246,0.4);}
+  .btn-ghost{
+    background:var(--glass-bg-strong); border:1px solid var(--glass-border-strong); color:var(--text-hi);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.1); transform:translateY(-3px);}
+
+  /* ---------- TERMINAL (signature element) ---------- */
+  .terminal-wrap{
+    animation:rise 1s cubic-bezier(.2,.8,.2,1) 0.25s both;
+  }
+  .terminal{
+    padding:0; overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; border-bottom:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.03);
+  }
+  .terminal-dots{display:flex; gap:7px;}
+  .terminal-dots span{width:11px; height:11px; border-radius:50%; display:block;}
+  .terminal-dots span:nth-child(1){background:#ff5f57;}
+  .terminal-dots span:nth-child(2){background:#febc2e;}
+  .terminal-dots span:nth-child(3){background:#28c840;}
+  .terminal-title{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-low);}
+  .terminal-body{
+    padding:24px 22px; min-height:320px;
+    font-family:'JetBrains Mono', monospace; font-size:13.5px; line-height:1.9;
+  }
+  .terminal-line{color:var(--text-mid); white-space:pre-wrap; word-break:break-word;}
+  .terminal-line .prompt{color:var(--cyan);}
+  .terminal-line .path{color:var(--violet);}
+  .terminal-line .out{color:var(--text-low); display:block; margin:2px 0 8px 0;}
+  .terminal-line .ok{color:#4ade80;}
+  .cursor{
+    display:inline-block; width:8px; height:15px; background:var(--cyan);
+    vertical-align:middle; animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .terminal-footer{
+    display:flex; justify-content:space-between; padding:12px 22px;
+    border-top:1px solid var(--glass-border); font-family:'JetBrains Mono', monospace;
+    font-size:11px; color:var(--text-low); letter-spacing:0.05em;
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-head{margin-bottom:52px; max-width:640px;}
+  .section-head h2{font-size:clamp(26px, 3.2vw, 36px); color:var(--text-hi); margin-bottom:14px;}
+  .section-head p{color:var(--text-mid); font-size:15.5px;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:28px;}
+  @media (max-width:860px){ .about-grid{grid-template-columns:1fr;} }
+  .about-card{padding:38px;}
+  .about-card p{color:var(--text-mid); font-size:15.5px; margin-bottom:16px;}
+  .about-card p:last-child{margin-bottom:0;}
+  .about-card strong{color:var(--text-hi); font-weight:600;}
+
+  .facts-card{padding:30px; display:flex; flex-direction:column; gap:20px;}
+  .fact-row{display:flex; align-items:flex-start; gap:14px;}
+  .fact-icon{
+    width:38px; height:38px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(59,130,246,0.14); border:1px solid rgba(59,130,246,0.25);
+    color:var(--azure); font-size:15px;
+  }
+  .fact-text .fact-label{font-family:'JetBrains Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-low); margin-bottom:3px;}
+  .fact-text .fact-value{font-size:14px; color:var(--text-hi); font-weight:500;}
+
+  /* ---------- EXPERIENCE TIMELINE ---------- */
+  .timeline{position:relative; padding-left:36px;}
+  .timeline::before{
+    content:''; position:absolute; left:9px; top:6px; bottom:6px; width:1.5px;
+    background:linear-gradient(180deg, var(--cyan), var(--violet) 70%, transparent);
+  }
+  .timeline-item{position:relative; padding-bottom:44px;}
+  .timeline-item:last-child{padding-bottom:0;}
+  .timeline-dot{
+    position:absolute; left:-36px; top:6px; width:19px; height:19px; border-radius:50%;
+    background:var(--bg-mid); border:2px solid var(--cyan);
+    box-shadow:0 0 0 5px rgba(34,211,238,0.08);
+  }
+  .timeline-card{padding:26px 30px;}
+  .timeline-top{display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:6px;}
+  .timeline-top h3{font-size:19px; color:var(--text-hi);}
+  .timeline-period{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--cyan); background:rgba(34,211,238,0.1); padding:4px 10px; border-radius:100px; border:1px solid rgba(34,211,238,0.2);}
+  .timeline-org{font-size:13.5px; color:var(--text-mid); margin-bottom:14px;}
+  .timeline-tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--text-mid);
+    padding:5px 11px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid var(--glass-border);
+    transition:all 0.25s ease;
+  }
+  .tag:hover{border-color:var(--azure); color:var(--text-hi); background:rgba(59,130,246,0.1);}
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;}
+  @media (max-width:860px){ .skills-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .skills-grid{grid-template-columns:1fr;} }
+  .skill-card{padding:26px;}
+  .skill-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .skill-icon{
+    width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:14px; background:rgba(139,92,246,0.14); border:1px solid rgba(139,92,246,0.28); color:var(--violet);
+  }
+  .skill-head h3{font-size:15px; color:var(--text-hi);}
+  .skill-pills{display:flex; flex-wrap:wrap; gap:8px;}
+
+  /* ---------- CERTS ---------- */
+  .certs-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:22px;}
+  @media (max-width:700px){ .certs-grid{grid-template-columns:1fr;} }
+  .cert-card{padding:28px; display:flex; align-items:center; gap:20px;}
+  .cert-badge{
+    width:56px; height:56px; border-radius:16px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+    background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.15));
+    border:1px solid var(--glass-border-strong); color:var(--cyan);
+  }
+  .cert-name{font-size:15.5px; color:var(--text-hi); font-weight:600; margin-bottom:4px;}
+  .cert-issuer{font-size:12.5px; color:var(--text-low); font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- FOCUS / PROGRESS ---------- */
+  .focus-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:16px 32px;}
+  @media (max-width:700px){ .focus-grid{grid-template-columns:1fr;} }
+  .focus-item{padding:20px 0;}
+  .focus-top{display:flex; justify-content:space-between; margin-bottom:10px; font-size:13.5px;}
+  .focus-top .fname{color:var(--text-hi); font-weight:500;}
+  .focus-top .fpct{font-family:'JetBrains Mono', monospace; color:var(--text-low); font-size:12px;}
+  .focus-bar-track{height:6px; border-radius:100px; background:rgba(255,255,255,0.06); overflow:hidden;}
+  .focus-bar-fill{
+    height:100%; border-radius:100px;
+    background:linear-gradient(90deg, var(--azure), var(--cyan));
+    width:0%; transition:width 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* ---------- BEYOND WORK ---------- */
+  .interest-grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:16px;}
+  @media (max-width:860px){ .interest-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:560px){ .interest-grid{grid-template-columns:repeat(2,1fr);} }
+  .interest-card{
+    padding:26px 18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;
+  }
+  .interest-card i{font-size:22px; color:var(--cyan); transition:transform 0.35s ease, color 0.35s ease;}
+  .interest-card:hover i{transform:scale(1.15) rotate(-6deg); color:var(--amber);}
+  .interest-card span{font-size:12.5px; color:var(--text-mid); font-weight:500;}
+
+  .fitness-note{padding:30px 34px; margin-top:24px; display:flex; align-items:center; gap:20px;}
+  .fitness-note i{font-size:26px; color:var(--amber); flex-shrink:0;}
+  .fitness-note p{color:var(--text-mid); font-size:14.5px;}
+  .fitness-note strong{color:var(--text-hi);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-card{
+    padding:60px 50px; text-align:center;
+    background:linear-gradient(150deg, rgba(59,130,246,0.1), rgba(139,92,246,0.08));
+  }
+  .contact-card h2{font-size:clamp(26px,3.6vw,40px); margin-bottom:16px;}
+  .contact-card p{color:var(--text-mid); max-width:480px; margin:0 auto 34px auto; font-size:15.5px;}
+  .contact-links{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .contact-link{
+    display:flex; align-items:center; gap:10px; padding:13px 22px; border-radius:100px;
+    background:var(--glass-bg-strong); border:1px solid var(--glass-border-strong); font-size:14px; font-weight:500;
+    transition:all 0.3s ease;
+  }
+  .contact-link:hover{transform:translateY(-3px); border-color:var(--cyan); background:rgba(34,211,238,0.1); box-shadow:0 10px 26px rgba(34,211,238,0.15);}
+
+  footer{padding:36px 0 60px; text-align:center;}
+  footer p{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-low);}
+
+  /* fade-in on scroll */
+  .fade-up{opacity:0; transform:translateY(28px); transition:opacity 0.8s cubic-bezier(.2,.8,.2,1), transform 0.8s cubic-bezier(.2,.8,.2,1);}
+  .fade-up.visible{opacity:1; transform:translateY(0);}
+
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-track{background:var(--bg-deep);}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12); border-radius:100px;}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2);}
+
+  a:focus-visible, button:focus-visible, .btn:focus-visible{
+    outline:2px solid var(--cyan); outline-offset:3px; border-radius:10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-overlay"></div>
+<div class="noise"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo"><span class="dot"></span> VINAY.MEHTA</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#focus">Focus</a>
+      <a href="#beyond">Beyond Work</a>
+    </div>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Endpoint Management → Cloud &amp; DevOps</div>
+        <h1 class="hero-name">Vinay Mehta<br><span class="accent-text">building toward Azure DevOps.</span></h1>
+        <div class="hero-role">Intune Engineer<span class="sep">/</span>Azure Enthusiast<span class="sep">/</span>Future Cloud &amp; DevOps Engineer</div>
+        <p class="hero-desc">I manage enterprise endpoints for a global retail account at Wipro, and I'm converting that hands-on infrastructure discipline into cloud automation, containers, and CI/CD — one deployment at a time.</p>
+        <div class="hero-actions">
+          <a href="#experience" class="btn btn-primary"><i class="fa-solid fa-arrow-down"></i> See my work</a>
+          <a href="#contact" class="btn btn-ghost"><i class="fa-regular fa-paper-plane"></i> Get in touch</a>
+        </div>
+      </div>
+
+      <div class="terminal-wrap">
+        <div class="terminal glass">
+          <div class="terminal-bar">
+            <div class="terminal-dots"><span></span><span></span><span></span></div>
+            <div class="terminal-title">vinay@career — transition.sh</div>
+            <div style="width:46px;"></div>
+          </div>
+          <div class="terminal-body" id="terminalBody"></div>
+          <div class="terminal-footer">
+            <span>bash</span>
+            <span id="terminalStatus">RUNNING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">01 · About</div>
+      <h2>From locked-down devices to open infrastructure.</h2>
+      <p>The same discipline that keeps enterprise endpoints compliant is what I bring to building and automating cloud systems.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card glass glass-hover fade-up">
+        <p>I'm an <strong>Endpoint Management Engineer at Wipro</strong>, working within the CIS-DWS domain on the <strong>METRO AG</strong> account, where I handle Microsoft Intune administration, device lifecycle management, and compliance policy enforcement across a large enterprise fleet.</p>
+        <p>Alongside my day-to-day role, I'm deliberately building toward <strong>Azure DevOps Engineering</strong> — learning Linux, Docker, Git, Python, and shell scripting, and applying automation thinking to problems I used to solve manually through a console.</p>
+        <p>I like systems that are predictable, documented, and repeatable — whether that's a compliance policy rollout or a CI/CD pipeline.</p>
+      </div>
+
+      <div class="facts-card glass glass-hover fade-up">
+        <div class="fact-row">
+          <div class="fact-icon"><i class="fa-solid fa-building"></i></div>
+          <div class="fact-text"><div class="fact-label">Company</div><div class="fact-value">Wipro — Scholar Trainee</div></div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon"><i class="fa-solid fa-diagram-project"></i></div>
+          <div class="fact-text"><div class="fact-label">Domain / Account</div><div class="fact-value">CIS-DWS · METRO AG</div></div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="fact-text"><div class="fact-label">Based in</div><div class="fact-value">New Delhi, India</div></div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div class="fact-text"><div class="fact-label">Education</div><div class="fact-value">BCA (IP University) · M.Tech (WILP, in progress)</div></div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-icon"><i class="fa-solid fa-language"></i></div>
+          <div class="fact-text"><div class="fact-label">Languages</div><div class="fact-value">Hindi, English</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">02 · Experience</div>
+      <h2>Where I've worked, and what I've owned.</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card glass glass-hover">
+          <div class="timeline-top">
+            <h3>Microsoft Intune Engineer — Endpoint Management</h3>
+            <span class="timeline-period">Current</span>
+          </div>
+          <div class="timeline-org">Wipro · Scholar Trainee · CIS-DWS domain · METRO AG account</div>
+          <div class="timeline-tags">
+            <span class="tag">Microsoft Intune</span>
+            <span class="tag">Device Lifecycle</span>
+            <span class="tag">Compliance Policies</span>
+            <span class="tag">Windows LAPS</span>
+            <span class="tag">Enterprise Endpoint Support</span>
+            <span class="tag">Jira</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card glass glass-hover">
+          <div class="timeline-top">
+            <h3>M.Tech — Work Integrated Learning Programme</h3>
+            <span class="timeline-period">In Progress</span>
+          </div>
+          <div class="timeline-org">BITS Pilani WILP · pursued alongside full-time role</div>
+          <div class="timeline-tags">
+            <span class="tag">Systems &amp; Infrastructure</span>
+            <span class="tag">Applied Research</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card glass glass-hover">
+          <div class="timeline-top">
+            <h3>BCA — Bachelor of Computer Applications</h3>
+            <span class="timeline-period">Completed</span>
+          </div>
+          <div class="timeline-org">IP University</div>
+          <div class="timeline-tags">
+            <span class="tag">Foundations of CS</span>
+            <span class="tag">Programming</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">03 · Skills</div>
+      <h2>The stack behind the transition.</h2>
+      <p>Enterprise endpoint tooling on one side, cloud &amp; automation fundamentals on the other.</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-solid fa-laptop-mobile"></i></div><h3>Endpoint Management</h3></div>
+        <div class="skill-pills">
+          <span class="tag">Microsoft Intune</span><span class="tag">MDM</span><span class="tag">MAM</span>
+          <span class="tag">Windows</span><span class="tag">Entra ID (basic)</span><span class="tag">Windows LAPS</span>
+        </div>
+      </div>
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-solid fa-cloud"></i></div><h3>Cloud</h3></div>
+        <div class="skill-pills"><span class="tag">Microsoft Azure</span></div>
+      </div>
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-brands fa-linux"></i></div><h3>Operating Systems</h3></div>
+        <div class="skill-pills"><span class="tag">Linux</span></div>
+      </div>
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-solid fa-code"></i></div><h3>Programming</h3></div>
+        <div class="skill-pills"><span class="tag">Python</span><span class="tag">Shell Scripting</span></div>
+      </div>
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-solid fa-infinity"></i></div><h3>DevOps</h3></div>
+        <div class="skill-pills"><span class="tag">Git</span><span class="tag">GitHub</span><span class="tag">Docker</span></div>
+      </div>
+      <div class="skill-card glass glass-hover fade-up">
+        <div class="skill-head"><div class="skill-icon"><i class="fa-solid fa-ticket"></i></div><h3>Ticketing</h3></div>
+        <div class="skill-pills"><span class="tag">Jira</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CERTIFICATIONS ================= -->
+<section id="certs">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">04 · Certifications</div>
+      <h2>Validated, not just self-taught.</h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card glass glass-hover fade-up">
+        <div class="cert-badge"><i class="fa-solid fa-award"></i></div>
+        <div>
+          <div class="cert-name">Microsoft MD-102</div>
+          <div class="cert-issuer">Endpoint Administrator Associate</div>
+        </div>
+      </div>
+      <div class="cert-card glass glass-hover fade-up">
+        <div class="cert-badge"><i class="fa-solid fa-award"></i></div>
+        <div>
+          <div class="cert-name">Azure Fundamentals</div>
+          <div class="cert-issuer">AZ-900</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CURRENT FOCUS ================= -->
+<section id="focus">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">05 · Current Focus</div>
+      <h2>What I'm deep in right now.</h2>
+      <p>Career goal: become an Azure DevOps Engineer — moving from endpoint management into cloud infrastructure, automation, and CI/CD.</p>
+    </div>
+
+    <div class="focus-grid glass" style="padding:14px 34px;">
+      <div class="focus-item fade-up" data-pct="70">
+        <div class="focus-top"><span class="fname">Azure DevOps</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+      <div class="focus-item fade-up" data-pct="65">
+        <div class="focus-top"><span class="fname">Docker</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+      <div class="focus-item fade-up" data-pct="75">
+        <div class="focus-top"><span class="fname">Linux</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+      <div class="focus-item fade-up" data-pct="68">
+        <div class="focus-top"><span class="fname">Python Automation</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+      <div class="focus-item fade-up" data-pct="80">
+        <div class="focus-top"><span class="fname">Git &amp; GitHub</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+      <div class="focus-item fade-up" data-pct="55">
+        <div class="focus-top"><span class="fname">CI/CD &amp; Infra Automation</span><span class="fpct">Active</span></div>
+        <div class="focus-bar-track"><div class="focus-bar-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BEYOND WORK ================= -->
+<section id="beyond">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="eyebrow">06 · Beyond Work</div>
+      <h2>What keeps me disciplined outside the terminal.</h2>
+    </div>
+
+    <div class="interest-grid">
+      <div class="interest-card glass glass-hover fade-up"><i class="fa-solid fa-dumbbell"></i><span>Bodybuilding</span></div>
+      <div class="interest-card glass glass-hover fade-up"><i class="fa-solid fa-microchip"></i><span>Technology</span></div>
+      <div class="interest-card glass glass-hover fade-up"><i class="fa-solid fa-car"></i><span>Cars</span></div>
+      <div class="interest-card glass glass-hover fade-up"><i class="fa-solid fa-clock"></i><span>Watches</span></div>
+      <div class="interest-card glass glass-hover fade-up"><i class="fa-solid fa-shoe-prints"></i><span>Sneakers</span></div>
+    </div>
+
+    <div class="fitness-note glass fade-up">
+      <i class="fa-solid fa-chart-line"></i>
+      <p><strong>4+ years of consistent training.</strong> I approach the gym the way I approach infrastructure — track everything, apply progressive overload, and iterate deliberately toward a lean, structured physique.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-card glass fade-up">
+      <h2>Let's build something reliable.</h2>
+      <p>Open to conversations about Azure, DevOps, endpoint automation, or opportunities that move me closer to cloud infrastructure work.</p>
+      <div class="contact-links">
+        <a href="mailto:your.email@example.com" class="contact-link"><i class="fa-solid fa-envelope"></i> Email</a>
+        <a href="https://linkedin.com/in/your-handle" class="contact-link"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+        <a href="https://github.com/your-handle" class="contact-link"><i class="fa-brands fa-github"></i> GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 VINAY MEHTA — DESIGNED &amp; BUILT WITH INTENT</p>
+</footer>
+
+<script>
+  // ---------- Terminal typing sequence: Intune commands transitioning into DevOps commands ----------
+  const lines = [
+    { type:'cmd', text:'intune device list --status offline --days 90' },
+    { type:'out', text:'3 devices found → flagged for wipe/delete review' },
+    { type:'cmd', text:'intune compliance apply --policy "Metro-Baseline"' },
+    { type:'out', text:'Policy applied to 1,204 endpoints', ok:true },
+    { type:'cmd', text:'az login && az account set --subscription "learning-sub"' },
+    { type:'out', text:'Authenticated. Subscription set.', ok:true },
+    { type:'cmd', text:'docker build -t portfolio-site .' },
+    { type:'out', text:'Image built successfully', ok:true },
+    { type:'cmd', text:'git commit -m "ci: add GitHub Actions pipeline"' },
+    { type:'out', text:'1 file changed, deploy.yml created' },
+    { type:'cmd', text:'gh workflow run deploy.yml' },
+    { type:'out', text:'✓ Deployed to GitHub Pages', ok:true },
+  ];
+
+  const body = document.getElementById('terminalBody');
+  const statusEl = document.getElementById('terminalStatus');
+  let li = 0, ci = 0;
+  let currentLineEl = null;
+
+  function typeNext(){
+    if(li >= lines.length){
+      statusEl.textContent = 'DONE';
+      setTimeout(()=>{ body.innerHTML=''; li=0; ci=0; statusEl.textContent='RUNNING'; typeNext(); }, 2600);
+      return;
+    }
+    const line = lines[li];
+
+    if(line.type === 'cmd'){
+      if(ci === 0){
+        currentLineEl = document.createElement('div');
+        currentLineEl.className = 'terminal-line';
+        currentLineEl.innerHTML = '<span class="prompt">vinay@wipro</span><span class="path">:~$</span> ';
+        body.appendChild(currentLineEl);
+      }
+      if(ci < line.text.length){
+        currentLineEl.innerHTML = '<span class="prompt">vinay@wipro</span><span class="path">:~$</span> ' + line.text.slice(0, ci+1) + '<span class="cursor"></span>';
+        ci++;
+        body.scrollTop = body.scrollHeight;
+        setTimeout(typeNext, 26 + Math.random()*35);
+      } else {
+        currentLineEl.innerHTML = '<span class="prompt">vinay@wipro</span><span class="path">:~$</span> ' + line.text;
+        ci = 0; li++;
+        setTimeout(typeNext, 260);
+      }
+    } else {
+      const out = document.createElement('span');
+      out.className = 'out' + (line.ok ? ' ok' : '');
+      out.textContent = line.text;
+      body.appendChild(out);
+      body.scrollTop = body.scrollHeight;
+      li++;
+      setTimeout(typeNext, 420);
+    }
+  }
+  typeNext();
+
+  // ---------- Scroll reveal ----------
+  const revealEls = document.querySelectorAll('.fade-up');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.15 });
+  revealEls.forEach((el,i)=>{
+    el.style.transitionDelay = (i % 4) * 0.06 + 's';
+    io.observe(el);
+  });
+
+  // ---------- Focus bar fill on view ----------
+  const focusItems = document.querySelectorAll('.focus-item');
+  const focusIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const fill = e.target.querySelector('.focus-bar-fill');
+        fill.style.width = e.target.dataset.pct + '%';
+        focusIO.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.4 });
+  focusItems.forEach(el=>focusIO.observe(el));
+</script>
+
+</body>
+</html>
